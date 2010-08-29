@@ -1,0 +1,8 @@
+An example using SimpleDomainStore
+
+You'll need to start the Derby Network Server
+and
+You need a database jdbc:derby://localhost:1527/groceryShop
+
+Warning: this is ongoing work, so, expect frequent changes
+
