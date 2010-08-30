@@ -31,7 +31,7 @@ class ProductSnippet {
   def sessionProduct = productSessionVar.is
 
   def baseWithTableForList(xhtml: NodeSeq): NodeSeq =
-    baseWithTableFor("category/product/list", 6, <lift:productSnippet.list eager_eval="true"/>)
+    baseWithTableFor("product/list", 6)
 
   def list(xhtml: NodeSeq): NodeSeq = {
     val sessionCategoryName = sessionCategory.name
@@ -56,7 +56,7 @@ class ProductSnippet {
   }
 
   def baseWithFormForAdd(xhtml: NodeSeq): NodeSeq =
-    baseWithFormFor("category/product/add", <lift:productSnippet.add form="post" eager_eval="true"/>)
+    baseWithFormFor("product/add")
 
   def add(xhtml: NodeSeq): NodeSeq = {
 
@@ -85,7 +85,7 @@ class ProductSnippet {
   }
 
   def baseWithFormForEdit(xhtml: NodeSeq): NodeSeq =
-    baseWithFormFor("category/product/edit", <lift:productSnippet.edit form="post" eager_eval="true"/>)
+    baseWithFormFor("product/edit")
 
   def edit(xhtml: NodeSeq): NodeSeq = {
 
@@ -113,7 +113,7 @@ class ProductSnippet {
   }
 
   def baseWithFormForTransfer(xhtml: NodeSeq): NodeSeq =
-    baseWithFormFor("category/product/transfer", <lift:productSnippet.transfer form="post" eager_eval="true"/>)
+    baseWithFormFor("product/transfer")
 
   def transfer(xhtml: NodeSeq): NodeSeq = {
 

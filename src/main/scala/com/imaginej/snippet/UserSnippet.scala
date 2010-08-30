@@ -18,7 +18,6 @@ import domain.user._
 
 import Util.baseWithTableFor
 import Util.baseWithFormFor
-import Util.baseWithNestedFormFor
 
 object userRequestVar extends RequestVar(new UserEntity)
 object userSessionVar extends SessionVar(new UserEntity)
@@ -32,7 +31,7 @@ class UserSnippet {
   def sessionLoggedInNickName = loggedInNickNameSessionVar.is
 
   def baseWithTableForList(xhtml: NodeSeq): NodeSeq =
-    baseWithTableFor("user/list", 3, <lift:userSnippet.list eager_eval="true"/>)
+    baseWithTableFor("user/list", 3)
 
   def list(xhtml: NodeSeq): NodeSeq = {
     UserStore.retrieveAll.flatMap(user => {
@@ -61,7 +60,7 @@ class UserSnippet {
   }
 
   def baseWithFormForAdd(xhtml: NodeSeq): NodeSeq =
-    baseWithFormFor("user/add", <lift:userSnippet.add form="post" eager_eval="true"/>)
+    baseWithFormFor("user/add")
 
   def add(xhtml: NodeSeq): NodeSeq = {
 
@@ -95,9 +94,8 @@ class UserSnippet {
       "submit" -> submitXhtml)
   }
 
-  def baseWithNestedFormForLogin(xhtml: NodeSeq): NodeSeq =
-    baseWithNestedFormFor("user/login",
-      <lift:userSnippet.ifNotLoggedIn><lift:userSnippet.login form="post" eager_eval="true"/></lift:userSnippet.ifNotLoggedIn>)
+  def baseWithFormForLogin(xhtml: NodeSeq): NodeSeq =
+    baseWithFormFor("user/login")
 
   def ifNotLoggedIn(xhtml: NodeSeq): NodeSeq =
     if (sessionLoggedInNickName == "") {
@@ -164,9 +162,8 @@ class UserSnippet {
       "submit" -> submitXhtml)
   }
 
-  def baseWithNestedFormForLogout(xhtml: NodeSeq): NodeSeq =
-    baseWithNestedFormFor("user/logout",
-      <lift:userSnippet.ifLoggedIn><lift:userSnippet.logout form="post" eager_eval="true"/></lift:userSnippet.ifLoggedIn>)
+  def baseWithFormForLogout(xhtml: NodeSeq): NodeSeq =
+    baseWithFormFor("user/logout")
 
   def ifLoggedIn(xhtml: NodeSeq): NodeSeq =
     if (sessionLoggedInNickName == "") {

@@ -26,7 +26,7 @@ class CategorySnippet {
   def sessionCategory = categorySessionVar.is
 
   def baseWithTableForList(xhtml: NodeSeq): NodeSeq =
-    baseWithTableFor("category/list", 1, <lift:categorySnippet.list eager_eval="true"/>)
+    baseWithTableFor("category/list", 1)
 
   def list(xhtml: NodeSeq): NodeSeq = {
     CategoryStore.retrieveAll.flatMap(category => {
@@ -37,7 +37,7 @@ class CategorySnippet {
   }
 
   def baseWithFormForAdd(xhtml: NodeSeq): NodeSeq =
-    baseWithFormFor("category/add", <lift:categorySnippet.add form="post" eager_eval="true"/>)
+    baseWithFormFor("category/add")
 
   def add(xhtml: NodeSeq): NodeSeq = {
 

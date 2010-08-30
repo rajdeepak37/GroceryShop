@@ -18,7 +18,7 @@ import model._
 
 import Util.baseWithTableFor
 import Util.baseWithFormFor
-import Util.baseWithSnippetFor
+import Util.baseWithAnyFor
 
 object cartItemSessionVar extends SessionVar(CartItem(new ProductEntity, 0))
 
@@ -34,7 +34,7 @@ class CartSnippet {
   def sessionCartItem = cartItemSessionVar.is
 
   def baseWithTableForList(xhtml: NodeSeq): NodeSeq =
-    baseWithTableFor("cart/list", 3, <lift:cartSnippet.list eager_eval="true"/>)
+    baseWithTableFor("cart/list", 3)
 
   def list(xhtml: NodeSeq): NodeSeq = {
     sessionCart.cartItems.flatMap(cartItem => {
@@ -57,7 +57,7 @@ class CartSnippet {
   }
 
   def baseWithFormForAdd(xhtml: NodeSeq): NodeSeq =
-    baseWithFormFor("cart/add", <lift:cartSnippet.add form="post" eager_eval="true"/>)
+    baseWithFormFor("cart/add")
 
   def add(xhtml: NodeSeq): NodeSeq = {
     var givenQuantity = ""
@@ -88,7 +88,7 @@ class CartSnippet {
   }
 
   def baseWithFormForRemove(xhtml: NodeSeq): NodeSeq =
-    baseWithFormFor("cart/remove", <lift:cartSnippet.remove form="post" eager_eval="true"/>)
+    baseWithFormFor("cart/remove")
 
   def remove(xhtml: NodeSeq): NodeSeq = {
 
@@ -117,8 +117,8 @@ class CartSnippet {
       "totalAmount" -> totalAmountXhtml)
   }
 
-  def baseWithSnippetForCheckOut(xhtml: NodeSeq): NodeSeq =
-    baseWithSnippetFor("cart/checkOut", <lift:cartSnippet.checkOut form="post" eager_eval="true"/>)
+  def baseWithAnyForCheckOut(xhtml: NodeSeq): NodeSeq =
+    baseWithAnyFor("cart/checkOut")
 
   def checkOut(xhtml: NodeSeq): NodeSeq = {
     val checkOutXhtml = if (sessionLoggedInNickName != "") {
