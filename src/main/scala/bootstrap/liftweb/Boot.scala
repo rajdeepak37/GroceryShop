@@ -5,6 +5,7 @@ import _root_.net.liftweb.sitemap._
 import _root_.net.liftweb.sitemap.Loc._
 
 import net.liftweb.common.Full
+import auth.{AuthRole, HttpBasicAuthentication, userRoles}
 
 import com.imaginej.domain.user._
 import com.imaginej.snippet.{loggedInNickNameSessionVar, userSessionVar}
@@ -32,6 +33,7 @@ class Boot {
     // where to search
     LiftRules.addToPackages("com.imaginej")
 
+    // view dispatch
     LiftRules.viewDispatch.append {
       case "index" :: Nil => {
         Left(() => Full(com.imaginej.view.index.View.doIt()))
@@ -84,12 +86,13 @@ class Boot {
       }
     }
 
+    // comet
     LiftRules.cometCreation.append {
       case CometCreationInfo("SessionActor", name, defaultXml, attributes, session) =>
         new SessionActor(session, Full("SessionActor"), name, defaultXml, attributes)
     }
 
-    // Build SiteMap
+    // site map
     val entries = SiteMap(
       Menu(Loc("Home", "index" :: Nil, "Home")),
       Menu(Loc("User Login", "user" :: "login" :: Nil, "User Login")),
@@ -108,6 +111,20 @@ class Boot {
       Menu(Loc("Checked Out", "cart" :: "checkedOut" :: Nil, "Checked Out", Hidden))
       )
     LiftRules.setSiteMap(entries)
+
+    // roles
+    val roles = AuthRole("Admin")
+    // protected resources
+    LiftRules.httpAuthProtectedResource.append {
+      case (Req("category" :: _, _, _)) => roles.getRoleByName("Admin")
+      case (Req("product" :: _, _, _)) => roles.getRoleByName("Admin")
+    }
+    // authentication
+    LiftRules.authentication = HttpBasicAuthentication("lift") {
+      case ("lucdup", "1234", req) =>
+        userRoles(AuthRole("Admin"))
+        true
+    }
   }
 }
 

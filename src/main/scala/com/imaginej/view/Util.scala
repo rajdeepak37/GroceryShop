@@ -12,29 +12,29 @@ import ViewTemplates.baseWithAny
 //
 
 object Util {
-  private def attribute(prefix: String, that: String, suffix: String) =
-    Attribute("what", Text(prefix + that + suffix), Null)
+  private def attribute(forWhat: String, that: String) =
+    Attribute("what", Text("fragments-hidden/" + forWhat + that), Null)
 
-  def baseWithTableFor(what: String, size: Int): NodeSeq =
+  def baseWithTableFor(forWhat: String, size: Int): NodeSeq =
     baseWithTable(
-        <lift:embed/> % attribute("fragments-hidden/", what, "Title"),
-        <lift:embed/> % attribute("fragments-hidden/", what, "H2"),
-        <lift:embed/> % attribute("fragments-hidden/", what, "TableHeader"),
-        <lift:embed/> % attribute("fragments-hidden/", what, "TableContent"),
-        <lift:embed/> % attribute("fragments-hidden/common/table/", size.toString, "/lineSeparator"),
-        <lift:embed/> % attribute("fragments-hidden/", what, "TableFooter"))
+        <lift:embed/> % attribute(forWhat, "Title"),
+        <lift:embed/> % attribute(forWhat, "H2"),
+        <lift:embed/> % attribute(forWhat, "TableHeader"),
+        <lift:embed/> % attribute(forWhat, "TableContent"),
+        <lift:embed/> % attribute("common/table/" + size, "/lineSeparator"),
+        <lift:embed/> % attribute(forWhat, "TableFooter"))
 
-  def baseWithFormFor(what: String): NodeSeq =
+  def baseWithFormFor(forWhat: String): NodeSeq =
     baseWithForm(
-        <lift:embed/> % attribute("fragments-hidden/", what, "FormTitle"),
-        <lift:embed/> % attribute("fragments-hidden/", what, "FormH2"),
-        <lift:embed/> % attribute("fragments-hidden/", what, "FormTable"))
+        <lift:embed/> % attribute(forWhat, "Title"),
+        <lift:embed/> % attribute(forWhat, "H2"),
+        <lift:embed/> % attribute(forWhat, "Form"))
 
-  def baseWithAnyFor(what: String): NodeSeq =
+  def baseWithAnyFor(forWhat: String): NodeSeq =
     baseWithAny(
-        <lift:embed/> % attribute("fragments-hidden/", what, "AnyTitle"),
-        <lift:embed/> % attribute("fragments-hidden/", what, "AnyH2"),
-        <lift:embed/> % attribute("fragments-hidden/", what, "Any"))
+        <lift:embed/> % attribute(forWhat, "Title"),
+        <lift:embed/> % attribute(forWhat, "H2"),
+        <lift:embed/> % attribute(forWhat, "Any"))
 }
 
 }
