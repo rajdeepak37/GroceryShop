@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:lift="http://liftweb.net/" xmlns:session="http://www.w3.org/1999/xhtml"
+      xmlns:clock="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+
+    <lift:CSS.blueprint/>
+    <lift:CSS.fancyType/>
+
+    <link rel="stylesheet" type="text/css" href="/css/default.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/base.css"/>
+    <script id="jquery" src="/classpath/jquery.js" type="text/javascript"/>
+    <script id="json" src="/classpath/json.js" type="text/javascript"/>
+</head>
+<body>
+<div class="container">
+
+    <div class="column span-12 last" style="text-align: right">
+        <lift:bind name="header"/>
+    </div>
+
+    <hr/>
+
+    <div class="column span-6 colborder sidebar" xmlns:lift="http://www.w3.org/1999/xhtml">
+        <hr class="space"/>
+        <lift:Menu.builder/>
+        <div>
+            <lift:msgs showAll="true"/>
+            <hr class="space"/>
+        </div>
+    </div>
+
+    <div class="column span-17 last">
+        <lift:accessSnippet.accessed>
+            <session:reset/>
+        </lift:accessSnippet.accessed>
+        <br/>
+        <lift:comet type="SessionActor" timeUnitInSeconds="1" sessionTime="60" timeToShowWarning="20">
+            <session:timeLeftInSeconds/>
+        </lift:comet>
+
+        <lift:bind name="content"/>
+    </div>
+
+    <hr/>
+
+    <div class="column span-23 last" style="text-align: center">
+        <lift:bind name="footer"/>
+    </div>
+
+</div>
+</body>
+</html>

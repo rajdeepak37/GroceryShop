@@ -1,18 +1,17 @@
-#base
-{
-background-color:#efefef;    
+#base {
+    background-color: #efefef;
 }
-h2
-{
-color:red;
-text-align:center;
+
+h2 {
+    color: red;
+    text-align: center;
 }
-table
-{
-color:blue;
-background-color:#ddddff;
+
+table {
+    color: blue;
+    background-color: #ddddff;
 }
-.sep
-{
-background-color:blue;    
+
+.sep {
+    background-color: blue;
 }
