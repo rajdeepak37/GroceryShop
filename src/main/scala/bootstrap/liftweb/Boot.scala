@@ -33,6 +33,10 @@ class Boot {
     LiftRules.addToPackages("com.imaginej")
 
     LiftRules.viewDispatch.append {
+      case "index" :: Nil => {
+        Left(() => Full(com.imaginej.view.index.View.doIt()))
+      }
+
       case "user" :: "list" :: Nil => {
         Left(() => Full(com.imaginej.view.user.View.doList()))
       }
@@ -45,12 +49,14 @@ class Boot {
       case "user" :: "logout" :: Nil => {
         Left(() => Full(com.imaginej.view.user.View.doLogout()))
       }
+
       case "category" :: "list" :: Nil => {
         Left(() => Full(com.imaginej.view.category.View.doList()))
       }
       case "category" :: "add" :: Nil => {
         Left(() => Full(com.imaginej.view.category.View.doAdd()))
       }
+
       case "product" :: "list" :: Nil => {
         Left(() => Full(com.imaginej.view.product.View.doList()))
       }
@@ -63,6 +69,7 @@ class Boot {
       case "product" :: "transfer" :: Nil => {
         Left(() => Full(com.imaginej.view.product.View.doTransfer()))
       }
+
       case "cart" :: "list" :: Nil => {
         Left(() => Full(com.imaginej.view.cart.View.doList()))
       }

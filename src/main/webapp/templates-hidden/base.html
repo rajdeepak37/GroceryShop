@@ -1,11 +1,14 @@
 <lift:surround with="default" xmlns:lift="http://www.w3.org/1999/xhtml">
     <lift:bind-at name="content">
         <head>
+            <link rel="stylesheet" type="text/css" href="/css/base.css"/>
             <lift:bind name="title"/>
         </head>
-        <h2>
-            <lift:bind name="h2"/>
-        </h2>
-        <lift:bind name="content"/>
+        <div id="base">
+            <h2>
+                <lift:bind name="h2"/>
+            </h2>
+            <lift:bind name="content"/>
+        </div>
     </lift:bind-at>
 </lift:surround>
