@@ -22,13 +22,13 @@ class CategorySnippet {
 
   def sessionCategory = categorySessionVar.is
 
-  def list(xhtml: NodeSeq): NodeSeq = {
-    CategoryStore.retrieveAll.flatMap(category => {
-      val productListXhtml = link("/product/list", () => categorySessionVar(category), Text(category.name + " Product List"))
-      bind("category", xhtml,
-        "productList" -> productListXhtml)
-    })
-  }
+  def list(xhtml: NodeSeq): NodeSeq = for{
+    category <- CategoryStore.retrieveAll
+    productListXhtml = link("/product/list", () => categorySessionVar(category), Text(category.name + " Product List"))
+    node <- bind(
+      "category", xhtml,
+      "productList" -> productListXhtml)
+  } yield node
 
   def add(xhtml: NodeSeq): NodeSeq = {
 
@@ -51,7 +51,8 @@ class CategorySnippet {
     val nameXhtml = text("", doName(_))
     val submitXhtml = submit("Add", doSubmit)
 
-    bind("category", xhtml,
+    bind(
+      "category", xhtml,
       "name" -> nameXhtml,
       "submit" -> submitXhtml)
   }
@@ -60,7 +61,8 @@ class CategorySnippet {
 
     val listXhtml = Text(sessionCategory.name + " Product List")
 
-    bind("category", xhtml,
+    bind(
+      "category", xhtml,
       "list" -> listXhtml)
   }
 
@@ -68,7 +70,8 @@ class CategorySnippet {
 
     val addXhtml = Text("Add " + sessionCategory.name + " Product")
 
-    bind("category", xhtml,
+    bind(
+      "category", xhtml,
       "add" -> addXhtml)
   }
 

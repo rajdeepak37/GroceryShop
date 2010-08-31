@@ -27,31 +27,32 @@ class UserSnippet {
 
   def sessionLoggedInNickName = loggedInNickNameSessionVar.is
 
-  def list(xhtml: NodeSeq): NodeSeq = {
-    UserStore.retrieveAll.flatMap(user => {
-      val userName = user.name
-      val nameXhtml = {
-        if (userName == sessionUser.name && sessionLoggedInNickName != "") {
-          Text(userName + " (" + sessionLoggedInNickName + ")")
-        } else {
-          Text(userName)
-        }
+  def list(xhtml: NodeSeq): NodeSeq = for{
+    user <- UserStore.retrieveAll
+    userName = user.name
+    nameXhtml = {
+      if (userName == sessionUser.name && sessionLoggedInNickName != "") {
+        Text(userName + " (" + sessionLoggedInNickName + ")")
+      } else {
+        Text(userName)
       }
-      val balanceXhtml = Text(user.balance.toString)
-      val loggedInAsXhtml = {
-        val loggedInAsOptions = for{
-          retrievedUser@UserEntity(`userName`, _) <- UserStore.retrieveAll
-          nickName <- retrievedUser.retrieveAllNickNames
-        } yield (nickName, nickName)
+    }
+    balanceXhtml = Text(user.balance.toString)
+    loggedInAsXhtml = {
+      val loggedInAsOptions = for{
+        retrievedUser@UserEntity(`userName`, _) <- UserStore.retrieveAll
+        nickName <- retrievedUser.retrieveAllNickNames
+      } yield (nickName, nickName)
 
-        select(loggedInAsOptions, Empty, _ => ())
-      }
-      bind("user", xhtml,
-        "name" -> nameXhtml,
-        "balance" -> balanceXhtml,
-        "loggedInAs" -> loggedInAsXhtml)
-    })
-  }
+      select(loggedInAsOptions, Empty, _ => ())
+    }
+    node <- bind(
+      "user", xhtml,
+      "name" -> nameXhtml,
+      "balance" -> balanceXhtml,
+      "loggedInAs" -> loggedInAsXhtml)
+  } yield node
+
 
   def add(xhtml: NodeSeq): NodeSeq = {
 
@@ -79,7 +80,8 @@ class UserSnippet {
     val passwordXhtml = password("", doPassword(_))
     val submitXhtml = submit("Add", doSubmit)
 
-    bind("user", xhtml,
+    bind(
+      "user", xhtml,
       "name" -> nameXhtml,
       "password" -> passwordXhtml,
       "submit" -> submitXhtml)
@@ -143,7 +145,8 @@ class UserSnippet {
     val passwordXhtml = password("", doPassword(_))
     val submitXhtml = submit("Login", doSubmit)
 
-    bind("user", xhtml,
+    bind(
+      "user", xhtml,
       "name" -> nameXhtml,
       "nickName" -> nickNameXhtml,
       "password" -> passwordXhtml,
@@ -173,7 +176,8 @@ class UserSnippet {
 
     val submitXhtml = submit("Logout", doSubmit)
 
-    bind("user", xhtml,
+    bind(
+      "user", xhtml,
       "submit" -> submitXhtml)
   }
 
@@ -181,7 +185,8 @@ class UserSnippet {
 
     val logoutXhtml = Text("Logout User " + sessionUser.name)
 
-    bind("user", xhtml,
+    bind(
+      "user", xhtml,
       "logout" -> logoutXhtml)
   }
 

@@ -12,29 +12,29 @@ import ViewTemplates.baseWithAny
 //
 
 object Util {
-  private def attribute(forWhat: String, that: String) =
-    Attribute("what", Text("fragments-hidden/" + forWhat + that), Null)
+  private def attribute(what: String, that: String) =
+    Attribute("what", Text("fragments-hidden/" + what + that), Null)
 
-  def baseWithTableFor(forWhat: String, size: Int): NodeSeq =
+  def baseWithTableFor(what: String, size: Int): NodeSeq =
     baseWithTable(
-        <lift:embed/> % attribute(forWhat, "Title"),
-        <lift:embed/> % attribute(forWhat, "H2"),
-        <lift:embed/> % attribute(forWhat, "TableHeader"),
-        <lift:embed/> % attribute(forWhat, "TableContent"),
+        <lift:embed/> % attribute(what, "Title"),
+        <lift:embed/> % attribute(what, "H2"),
+        <lift:embed/> % attribute(what, "TableHeader"),
+        <lift:embed/> % attribute(what, "TableContent"),
         <lift:embed/> % attribute("common/table/" + size, "/lineSeparator"),
-        <lift:embed/> % attribute(forWhat, "TableFooter"))
+        <lift:embed/> % attribute(what, "TableFooter"))
 
-  def baseWithFormFor(forWhat: String): NodeSeq =
+  def baseWithFormFor(what: String): NodeSeq =
     baseWithForm(
-        <lift:embed/> % attribute(forWhat, "Title"),
-        <lift:embed/> % attribute(forWhat, "H2"),
-        <lift:embed/> % attribute(forWhat, "Form"))
+        <lift:embed/> % attribute(what, "Title"),
+        <lift:embed/> % attribute(what, "H2"),
+        <lift:embed/> % attribute(what, "Form"))
 
-  def baseWithAnyFor(forWhat: String): NodeSeq =
+  def baseWithAnyFor(what: String): NodeSeq =
     baseWithAny(
-        <lift:embed/> % attribute(forWhat, "Title"),
-        <lift:embed/> % attribute(forWhat, "H2"),
-        <lift:embed/> % attribute(forWhat, "Any"))
+        <lift:embed/> % attribute(what, "Title"),
+        <lift:embed/> % attribute(what, "H2"),
+        <lift:embed/> % attribute(what, "Any"))
 }
 
 }

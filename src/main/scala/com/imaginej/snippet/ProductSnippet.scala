@@ -29,24 +29,23 @@ class ProductSnippet {
 
   def list(xhtml: NodeSeq): NodeSeq = {
     val sessionCategoryName = sessionCategory.name
-    val sessionCategoryProducts = for{
+    for{
       product@(ProductEntity(_, _, _, CategoryEntity(`sessionCategoryName`, _))) <- ProductStore.retrieveAll
-    } yield product
-    sessionCategoryProducts.flatMap(product => {
-      val nameXhtml = Text(product.name)
-      val quantityInStockXhtml = Text(product.quantityInStock.toString)
-      val priceXhtml = Text(product.price.toString)
-      val editXhtml = link("edit", () => productSessionVar(product), Text("Edit " + product.name + " Product"))
-      val transferXhtml = link("transfer", () => productSessionVar(product), Text("Transfer " + product.name + " Product"))
-      val addToCartXhtml = link("/cart/add", () => productSessionVar(product), Text("Add " + product.name + " Product To Cart"))
-      bind("product", xhtml,
+      nameXhtml = Text(product.name)
+      quantityInStockXhtml = Text(product.quantityInStock.toString)
+      priceXhtml = Text(product.price.toString)
+      editXhtml = link("edit", () => productSessionVar(product), Text("Edit " + product.name + " Product"))
+      transferXhtml = link("transfer", () => productSessionVar(product), Text("Transfer " + product.name + " Product"))
+      addToCartXhtml = link("/cart/add", () => productSessionVar(product), Text("Add " + product.name + " Product To Cart"))
+      node <- bind(
+        "product", xhtml,
         "name" -> nameXhtml,
         "quantityInStock" -> quantityInStockXhtml,
         "price" -> priceXhtml,
         "edit" -> editXhtml,
         "transfer" -> transferXhtml,
         "addToCart" -> addToCartXhtml)
-    })
+    } yield node
   }
 
   def add(xhtml: NodeSeq): NodeSeq = {
@@ -70,7 +69,8 @@ class ProductSnippet {
     val nameXhtml = text("", doName(_))
     val submitXhtml = submit("Add", doSubmit)
 
-    bind("product", xhtml,
+    bind(
+      "product", xhtml,
       "name" -> nameXhtml,
       "submit" -> submitXhtml)
   }
@@ -94,7 +94,8 @@ class ProductSnippet {
     val priceXhtml = text(sessionProduct.price.toString, doPrice(_))
     val submitXhtml = submit("Edit", doSubmit)
 
-    bind("product", xhtml,
+    bind(
+      "product", xhtml,
       "quantityInStock" -> quantityInStockXhtml,
       "price" -> priceXhtml,
       "submit" -> submitXhtml)
@@ -123,7 +124,8 @@ class ProductSnippet {
     }
     val submitXhtml = submit("Transfer", doSubmit)
 
-    bind("product", xhtml,
+    bind(
+      "product", xhtml,
       "category" -> categoryXhtml,
       "submit" -> submitXhtml)
   }

@@ -13,7 +13,8 @@ object accessedSessionVar extends SessionVar(new Date)
 
 class AccessSnippet {
   def accessed(xhtml: NodeSeq): NodeSeq = {
-    bind("session", xhtml,
+    bind(
+      "session", xhtml,
       "reset" -> {
         accessedSessionVar(new Date)
         Text("")

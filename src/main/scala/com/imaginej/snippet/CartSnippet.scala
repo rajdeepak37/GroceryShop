@@ -29,25 +29,23 @@ class CartSnippet {
 
   def sessionCartItem = cartItemSessionVar.is
 
-  def list(xhtml: NodeSeq): NodeSeq = {
-    sessionCart.cartItems.flatMap(cartItem => {
-
-      val productNameXhtml = Text(cartItem.product.name)
-      val quantityXhtml = ajaxSelect(
-        (cartItem.quantity / 2 to 2 * cartItem.quantity).toList.map(i => (i.toString, i.toString)),
-        Full(cartItem.quantity.toString),
-        v => {
-          cartItem.quantity = v.toInt
-          JsCmds.SetHtml("totalAmount", Text(sessionCart.totalAmount.toString))
-        })
-      val removeXhtml = link("remove", () => cartItemSessionVar(cartItem), Text("Remove " + cartItem.product.name + " Cart Item"))
-
-      bind("cartItem", xhtml,
-        "productName" -> productNameXhtml,
-        "quantity" -> quantityXhtml,
-        "remove" -> removeXhtml)
-    })
-  }
+  def list(xhtml: NodeSeq): NodeSeq = for{
+    cartItem <- sessionCart.cartItems
+    productNameXhtml = Text(cartItem.product.name)
+    quantityXhtml = ajaxSelect(
+      (cartItem.quantity / 2 to 2 * cartItem.quantity).toList.map(i => (i.toString, i.toString)),
+      Full(cartItem.quantity.toString),
+      v => {
+        cartItem.quantity = v.toInt
+        JsCmds.SetHtml("totalAmount", Text(sessionCart.totalAmount.toString))
+      })
+    removeXhtml = link("remove", () => cartItemSessionVar(cartItem), Text("Remove " + cartItem.product.name + " Cart Item"))
+    node <- bind(
+      "cartItem", xhtml,
+      "productName" -> productNameXhtml,
+      "quantity" -> quantityXhtml,
+      "remove" -> removeXhtml)
+  } yield node
 
   def add(xhtml: NodeSeq): NodeSeq = {
     var givenQuantity = ""
@@ -64,7 +62,8 @@ class CartSnippet {
     val quantityXhtml = text("", doQuantity(_))
     val submitXhtml = submit("Add", doSubmit)
 
-    bind("cart", xhtml,
+    bind(
+      "cart", xhtml,
       "quantity" -> quantityXhtml,
       "submit" -> submitXhtml)
   }
@@ -73,7 +72,8 @@ class CartSnippet {
 
     val addXhtml = Text("Add " + sessionProduct.name)
 
-    bind("cart", xhtml,
+    bind(
+      "cart", xhtml,
       "add" -> addXhtml)
   }
 
@@ -89,7 +89,8 @@ class CartSnippet {
 
     val submitXhtml = submit("Remove", doSubmit)
 
-    bind("cart", xhtml,
+    bind(
+      "cart", xhtml,
       "submit" -> submitXhtml)
   }
 
@@ -100,7 +101,8 @@ class CartSnippet {
       {sessionCart.totalAmount.toString}
     </span>
 
-    bind("cart", xhtml,
+    bind(
+      "cart", xhtml,
       "totalAmount" -> totalAmountXhtml)
   }
 
@@ -120,7 +122,8 @@ class CartSnippet {
       error("No user logged in")
       redirectTo("/user/list")
     }
-    bind("cart", xhtml,
+    bind(
+      "cart", xhtml,
       "checkedOut" -> checkedOutXhtml)
   }
 

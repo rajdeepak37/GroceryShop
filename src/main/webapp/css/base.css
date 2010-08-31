@@ -12,6 +12,9 @@ table {
     background-color: #ddddff;
 }
 
-.sep {
+.separator {
     background-color: blue;
+}
+.centered {
+    text-align:center
 }
