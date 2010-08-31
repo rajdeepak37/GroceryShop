@@ -29,8 +29,53 @@ class Boot {
   })
 
   def boot {
-    // where to search for snippets
+    // where to search
     LiftRules.addToPackages("com.imaginej")
+
+    LiftRules.viewDispatch.append {
+      case "user" :: "list" :: Nil => {
+        Left(() => Full(com.imaginej.view.user.View.doList()))
+      }
+      case "user" :: "add" :: Nil => {
+        Left(() => Full(com.imaginej.view.user.View.doAdd()))
+      }
+      case "user" :: "login" :: Nil => {
+        Left(() => Full(com.imaginej.view.user.View.doLogin()))
+      }
+      case "user" :: "logout" :: Nil => {
+        Left(() => Full(com.imaginej.view.user.View.doLogout()))
+      }
+      case "category" :: "list" :: Nil => {
+        Left(() => Full(com.imaginej.view.category.View.doList()))
+      }
+      case "category" :: "add" :: Nil => {
+        Left(() => Full(com.imaginej.view.category.View.doAdd()))
+      }
+      case "product" :: "list" :: Nil => {
+        Left(() => Full(com.imaginej.view.product.View.doList()))
+      }
+      case "product" :: "add" :: Nil => {
+        Left(() => Full(com.imaginej.view.product.View.doAdd()))
+      }
+      case "product" :: "edit" :: Nil => {
+        Left(() => Full(com.imaginej.view.product.View.doEdit()))
+      }
+      case "product" :: "transfer" :: Nil => {
+        Left(() => Full(com.imaginej.view.product.View.doTransfer()))
+      }
+      case "cart" :: "list" :: Nil => {
+        Left(() => Full(com.imaginej.view.cart.View.doList()))
+      }
+      case "cart" :: "add" :: Nil => {
+        Left(() => Full(com.imaginej.view.cart.View.doAdd()))
+      }
+      case "cart" :: "remove" :: Nil => {
+        Left(() => Full(com.imaginej.view.cart.View.doRemove()))
+      }
+      case "cart" :: "checkedOut" :: Nil => {
+        Left(() => Full(com.imaginej.view.cart.View.doCheckedOut()))
+      }
+    }
 
     LiftRules.cometCreation.append {
       case CometCreationInfo("SessionActor", name, defaultXml, attributes, session) =>
@@ -46,10 +91,10 @@ class Boot {
       Menu(Loc("Category List", "category" :: "list" :: Nil, "Category List")),
       Menu(Loc("Add User", "user" :: "add" :: Nil, "Add User", Hidden)),
       Menu(Loc("Add Category", "category" :: "add" :: Nil, "Add Category", Hidden)),
-      Menu(Loc("Product List", "category" :: "product" :: "list" :: Nil, "Product List", Hidden)),
-      Menu(Loc("Add Product", "category" :: "product" :: "add" :: Nil, "Add Product", Hidden)),
-      Menu(Loc("Edit Product", "category" :: "product" :: "edit" :: Nil, "Edit Product", Hidden)),
-      Menu(Loc("Transfer Product", "category" :: "product" :: "transfer" :: Nil, "Transfer Product", Hidden)),
+      Menu(Loc("Product List", "product" :: "list" :: Nil, "Product List", Hidden)),
+      Menu(Loc("Add Product", "product" :: "add" :: Nil, "Add Product", Hidden)),
+      Menu(Loc("Edit Product", "product" :: "edit" :: Nil, "Edit Product", Hidden)),
+      Menu(Loc("Transfer Product", "product" :: "transfer" :: Nil, "Transfer Product", Hidden)),
       Menu(Loc("Add To Cart", "cart" :: "add" :: Nil, "Add To Cart", Hidden)),
       Menu(Loc("Cart", "cart" :: "list" :: Nil, "Cart", Hidden)),
       Menu(Loc("Remove Cart Item", "cart" :: "remove" :: Nil, "Remove Cart Item", Hidden)),

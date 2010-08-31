@@ -2,7 +2,7 @@ package com.imaginej {
 
 package snippet {
 
-import xml.{Attribute, Text, NodeSeq}
+import xml.{Text, NodeSeq}
 
 import net.liftweb.common.Empty
 import net.liftweb.http.{SessionVar, RequestVar, S, SHtml}
@@ -16,9 +16,6 @@ import SHtml._
 
 import domain.user._
 
-import Util.baseWithTableFor
-import Util.baseWithFormFor
-
 object userRequestVar extends RequestVar(new UserEntity)
 object userSessionVar extends SessionVar(new UserEntity)
 object loggedInNickNameSessionVar extends SessionVar("")
@@ -29,9 +26,6 @@ class UserSnippet {
   def sessionUser = userSessionVar.is
 
   def sessionLoggedInNickName = loggedInNickNameSessionVar.is
-
-  def baseWithTableForList(xhtml: NodeSeq): NodeSeq =
-    baseWithTableFor("user/list", 3)
 
   def list(xhtml: NodeSeq): NodeSeq = {
     UserStore.retrieveAll.flatMap(user => {
@@ -58,9 +52,6 @@ class UserSnippet {
         "loggedInAs" -> loggedInAsXhtml)
     })
   }
-
-  def baseWithFormForAdd(xhtml: NodeSeq): NodeSeq =
-    baseWithFormFor("user/add")
 
   def add(xhtml: NodeSeq): NodeSeq = {
 
@@ -93,9 +84,6 @@ class UserSnippet {
       "password" -> passwordXhtml,
       "submit" -> submitXhtml)
   }
-
-  def baseWithFormForLogin(xhtml: NodeSeq): NodeSeq =
-    baseWithFormFor("user/login")
 
   def ifNotLoggedIn(xhtml: NodeSeq): NodeSeq =
     if (sessionLoggedInNickName == "") {
@@ -161,9 +149,6 @@ class UserSnippet {
       "password" -> passwordXhtml,
       "submit" -> submitXhtml)
   }
-
-  def baseWithFormForLogout(xhtml: NodeSeq): NodeSeq =
-    baseWithFormFor("user/logout")
 
   def ifLoggedIn(xhtml: NodeSeq): NodeSeq =
     if (sessionLoggedInNickName == "") {

@@ -13,9 +13,6 @@ import SHtml._
 
 import domain.grocery._
 
-import Util.baseWithTableFor
-import Util.baseWithFormFor
-
 object categoryRequestVar extends RequestVar(new CategoryEntity)
 
 object categorySessionVar extends SessionVar(new CategoryEntity)
@@ -25,19 +22,13 @@ class CategorySnippet {
 
   def sessionCategory = categorySessionVar.is
 
-  def baseWithTableForList(xhtml: NodeSeq): NodeSeq =
-    baseWithTableFor("category/list", 1)
-
   def list(xhtml: NodeSeq): NodeSeq = {
     CategoryStore.retrieveAll.flatMap(category => {
-      val productListXhtml = link("product/list", () => categorySessionVar(category), Text(category.name + " Product List"))
+      val productListXhtml = link("/product/list", () => categorySessionVar(category), Text(category.name + " Product List"))
       bind("category", xhtml,
         "productList" -> productListXhtml)
     })
   }
-
-  def baseWithFormForAdd(xhtml: NodeSeq): NodeSeq =
-    baseWithFormFor("category/add")
 
   def add(xhtml: NodeSeq): NodeSeq = {
 

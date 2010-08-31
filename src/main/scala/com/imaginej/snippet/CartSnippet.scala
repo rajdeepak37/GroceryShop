@@ -2,7 +2,7 @@ package com.imaginej {
 
 package snippet {
 
-import xml.{Attribute, Text, NodeSeq}
+import xml.{Text, NodeSeq}
 
 import net.liftweb.common.Full
 import net.liftweb.http.{SessionVar, S, SHtml}
@@ -16,10 +16,6 @@ import SHtml._
 import domain.grocery._
 import model._
 
-import Util.baseWithTableFor
-import Util.baseWithFormFor
-import Util.baseWithAnyFor
-
 object cartItemSessionVar extends SessionVar(CartItem(new ProductEntity, 0))
 
 class CartSnippet {
@@ -32,9 +28,6 @@ class CartSnippet {
   def sessionLoggedInNickName = loggedInNickNameSessionVar.is
 
   def sessionCartItem = cartItemSessionVar.is
-
-  def baseWithTableForList(xhtml: NodeSeq): NodeSeq =
-    baseWithTableFor("cart/list", 3)
 
   def list(xhtml: NodeSeq): NodeSeq = {
     sessionCart.cartItems.flatMap(cartItem => {
@@ -55,9 +48,6 @@ class CartSnippet {
         "remove" -> removeXhtml)
     })
   }
-
-  def baseWithFormForAdd(xhtml: NodeSeq): NodeSeq =
-    baseWithFormFor("cart/add")
 
   def add(xhtml: NodeSeq): NodeSeq = {
     var givenQuantity = ""
@@ -87,9 +77,6 @@ class CartSnippet {
       "add" -> addXhtml)
   }
 
-  def baseWithFormForRemove(xhtml: NodeSeq): NodeSeq =
-    baseWithFormFor("cart/remove")
-
   def remove(xhtml: NodeSeq): NodeSeq = {
 
     def doSubmit() = {
@@ -117,11 +104,8 @@ class CartSnippet {
       "totalAmount" -> totalAmountXhtml)
   }
 
-  def baseWithAnyForCheckOut(xhtml: NodeSeq): NodeSeq =
-    baseWithAnyFor("cart/checkOut")
-
-  def checkOut(xhtml: NodeSeq): NodeSeq = {
-    val checkOutXhtml = if (sessionLoggedInNickName != "") {
+  def checkedOut(xhtml: NodeSeq): NodeSeq = {
+    val checkedOutXhtml = if (sessionLoggedInNickName != "") {
       try {
         CheckOutService.checkOut((sessionUser.name, for{
           CartItem(product, quantity) <- sessionCart.cartItems
@@ -137,7 +121,7 @@ class CartSnippet {
       redirectTo("/user/list")
     }
     bind("cart", xhtml,
-      "checkOut" -> checkOutXhtml)
+      "checkedOut" -> checkedOutXhtml)
   }
 
 }

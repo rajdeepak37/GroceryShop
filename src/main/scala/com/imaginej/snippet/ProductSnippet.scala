@@ -14,9 +14,6 @@ import SHtml._
 import domain.grocery._
 import model._
 
-import Util.baseWithTableFor
-import Util.baseWithFormFor
-
 object productRequestVar extends RequestVar(new ProductEntity)
 
 object productSessionVar extends SessionVar(new ProductEntity)
@@ -29,9 +26,6 @@ class ProductSnippet {
   def requestProduct = productRequestVar.is
 
   def sessionProduct = productSessionVar.is
-
-  def baseWithTableForList(xhtml: NodeSeq): NodeSeq =
-    baseWithTableFor("product/list", 6)
 
   def list(xhtml: NodeSeq): NodeSeq = {
     val sessionCategoryName = sessionCategory.name
@@ -54,9 +48,6 @@ class ProductSnippet {
         "addToCart" -> addToCartXhtml)
     })
   }
-
-  def baseWithFormForAdd(xhtml: NodeSeq): NodeSeq =
-    baseWithFormFor("product/add")
 
   def add(xhtml: NodeSeq): NodeSeq = {
 
@@ -84,9 +75,6 @@ class ProductSnippet {
       "submit" -> submitXhtml)
   }
 
-  def baseWithFormForEdit(xhtml: NodeSeq): NodeSeq =
-    baseWithFormFor("product/edit")
-
   def edit(xhtml: NodeSeq): NodeSeq = {
 
     def doQuantityInStock(productQuantityInStock: String) = {
@@ -111,9 +99,6 @@ class ProductSnippet {
       "price" -> priceXhtml,
       "submit" -> submitXhtml)
   }
-
-  def baseWithFormForTransfer(xhtml: NodeSeq): NodeSeq =
-    baseWithFormFor("product/transfer")
 
   def transfer(xhtml: NodeSeq): NodeSeq = {
 
