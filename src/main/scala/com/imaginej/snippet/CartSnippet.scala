@@ -16,6 +16,8 @@ import SHtml._
 import domain.grocery._
 import model._
 
+import I10N.i10n  
+
 object cartItemSessionVar extends SessionVar(CartItem(new ProductEntity, 0))
 
 class CartSnippet {
@@ -35,11 +37,11 @@ class CartSnippet {
     quantityXhtml = ajaxSelect(
       (cartItem.quantity / 2 to 2 * cartItem.quantity).toList.map(i => (i.toString, i.toString)),
       Full(cartItem.quantity.toString),
-      v => {
-        cartItem.quantity = v.toInt
+      value => {
+        cartItem.quantity = value.toInt
         JsCmds.SetHtml("totalAmount", Text(sessionCart.totalAmount.toString))
       })
-    removeXhtml = link("remove", () => cartItemSessionVar(cartItem), Text("Remove " + cartItem.product.name + " Cart Item"))
+    removeXhtml = link("remove", () => cartItemSessionVar(cartItem), Text(i10n("Cart_RemoveCartItem", cartItem.product.name)))
     node <- bind(
       "cartItem", xhtml,
       "productName" -> productNameXhtml,
@@ -60,21 +62,12 @@ class CartSnippet {
     }
 
     val quantityXhtml = text("", doQuantity(_))
-    val submitXhtml = submit("Add", doSubmit)
+    val submitXhtml = submit(?("Cart_Add"), doSubmit)
 
     bind(
       "cart", xhtml,
       "quantity" -> quantityXhtml,
       "submit" -> submitXhtml)
-  }
-
-  def addProductText(xhtml: NodeSeq): NodeSeq = {
-
-    val addXhtml = Text("Add " + sessionProduct.name)
-
-    bind(
-      "cart", xhtml,
-      "add" -> addXhtml)
   }
 
   def remove(xhtml: NodeSeq): NodeSeq = {
@@ -87,7 +80,7 @@ class CartSnippet {
       redirectTo("list")
     }
 
-    val submitXhtml = submit("Remove", doSubmit)
+    val submitXhtml = submit(?("Cart_Remove"), doSubmit)
 
     bind(
       "cart", xhtml,
@@ -113,18 +106,27 @@ class CartSnippet {
           CartItem(product, quantity) <- sessionCart.cartItems
         } yield (product.name, quantity)))
         cartSessionVar(Cart(List[CartItem]()))
-        Text("Cart Checked Out")
+        Text(?("Cart_CartCheckedOut"))
       } catch {
-        case e: CheckOutProductsNotInStockException => error(e.getMessage()); redirectTo("/cart/list")
-        case e: CheckOutUserNotEnoughFundsException => error(e.getMessage()); redirectTo("/user/list")
+        case e: CheckOutProductsNotInStockException => error(i10n(e.getMessage(), sessionProduct.name)); redirectTo("/cart/list")
+        case e: CheckOutUserNotEnoughFundsException => error(i10n(e.getMessage(), sessionUser.name)); redirectTo("/user/list")
       }
     } else {
-      error("No user logged in")
+      error(?("Cart_Error_NoUserLoggedIn"))
       redirectTo("/user/list")
     }
     bind(
       "cart", xhtml,
       "checkedOut" -> checkedOutXhtml)
+  }
+  
+  def addProductText(xhtml: NodeSeq): NodeSeq = {
+
+    val addXhtml = Text(i10n("Cart_AddProduct", sessionProduct.name))
+
+    bind(
+      "cart", xhtml,
+      "add" -> addXhtml)
   }
 
 }

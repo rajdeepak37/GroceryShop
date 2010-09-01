@@ -2,19 +2,19 @@
     <lift:userSnippet.login form="post" eager_eval="true">
         <table xmlns:user="http://www.w3.org/1999/xhtml">
             <tr>
-                <td>name</td>
+                <td><lift:loc locid="User_Name">Name</lift:loc></td>
                 <td>
                     <user:name/>
                 </td>
             </tr>
             <tr>
-                <td>nick name</td>
+                <td><lift:loc locid="User_NickName">Nick name</lift:loc></td>
                 <td>
                     <user:nickName/>
                 </td>
             </tr>
             <tr>
-                <td>password</td>
+                <td><lift:loc locid="User_Password">Password</lift:loc></td>
                 <td>
                     <user:password/>
                 </td>
@@ -26,7 +26,6 @@
                 </td>
             </tr>
         </table>
-
     </lift:userSnippet.login>
 </lift:userSnippet.ifNotLoggedIn>
 

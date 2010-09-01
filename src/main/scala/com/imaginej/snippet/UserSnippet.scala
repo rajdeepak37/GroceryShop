@@ -16,6 +16,8 @@ import SHtml._
 
 import domain.user._
 
+import I10N.i10n  
+
 object userRequestVar extends RequestVar(new UserEntity)
 object userSessionVar extends SessionVar(new UserEntity)
 object loggedInNickNameSessionVar extends SessionVar("")
@@ -53,7 +55,6 @@ class UserSnippet {
       "loggedInAs" -> loggedInAsXhtml)
   } yield node
 
-
   def add(xhtml: NodeSeq): NodeSeq = {
 
     def doName(userName: String) = {
@@ -66,11 +67,11 @@ class UserSnippet {
 
     def doSubmit() = {
       if (requestUser.name.length == 0) {
-        error("User name cannot be blank")
+        error(?("User_Error_UserNameCannotBeBlank"))
       } else {
         UserStore.retrieveByName(requestUser.name) match {
           case None => UserStore.create((requestUser.name, requestUser.password))
-          case _ => error("User " + requestUser.name + " already exists")
+          case _ => error(i10n("User_Error_UserAlreadyExists", requestUser.name))
         }
         redirectTo("list")
       }
@@ -78,7 +79,7 @@ class UserSnippet {
 
     val nameXhtml = text("", doName(_))
     val passwordXhtml = password("", doPassword(_))
-    val submitXhtml = submit("Add", doSubmit)
+    val submitXhtml = submit(?("User_Add"), doSubmit)
 
     bind(
       "user", xhtml,
@@ -91,7 +92,7 @@ class UserSnippet {
     if (sessionLoggedInNickName == "") {
       xhtml
     } else {
-      error("You are already logged in as " + sessionUser.name + " (" + sessionLoggedInNickName + ")")
+      error(i10n("User_Error_YouAreAlreadyLoggedInAs", sessionUser.name, sessionLoggedInNickName))
       redirectTo("list")
     }
 
@@ -127,15 +128,15 @@ class UserSnippet {
               UserService.addLoggedInNickName((sessionUser.name, givenNickName))
               loggedInNickNameSessionVar(givenNickName)
             } catch {
-              case ole: OptimisticLockException => error("Error logging in user (try again)")
-              case pe: PersistenceException => error("Error logging in user")
+              case ole: OptimisticLockException => error(?("User_Error_ErrorLoggingInUserTryAgain"))
+              case pe: PersistenceException => error(?("User_Error_ErrorLoggingInUser"))
             }
-          case _ => error("Nickname " + givenNickName + " for user " + requestUser.name + " is already in use")
+          case _ => error(i10n("User_Error_NicknameForUserIsAlreadyInUse", givenNickName, requestUser.name))
         }
       } else if (loginUserExists) {
-        error("Password for user " + requestUser.name + " is not correct")
+        error(i10n("User_Error_PasswordForUserIsNotCorrect", requestUser.name))
       } else {
-        error("User " + requestUser.name + " does not exist")
+        error(i10n("User_Error_UserDoesNotExist", requestUser.name))
       }
       redirectTo("list")
     }
@@ -143,7 +144,7 @@ class UserSnippet {
     val nameXhtml = text("", doName(_))
     val nickNameXhtml = text("", doNickName(_))
     val passwordXhtml = password("", doPassword(_))
-    val submitXhtml = submit("Login", doSubmit)
+    val submitXhtml = submit(?("User_Login"), doSubmit)
 
     bind(
       "user", xhtml,
@@ -155,7 +156,7 @@ class UserSnippet {
 
   def ifLoggedIn(xhtml: NodeSeq): NodeSeq =
     if (sessionLoggedInNickName == "") {
-      error("You are not logged in")
+      error(?("User_Error_YouAreNotLoggedIn"))
       redirectTo("list")
     } else {
       xhtml
@@ -168,13 +169,13 @@ class UserSnippet {
         UserService.removeLoggedInNickName((sessionUser.name, sessionLoggedInNickName))
         loggedInNickNameSessionVar("")
       } catch {
-        case ole: OptimisticLockException => error("Error logging out user (try again)")
-        case pe: PersistenceException => error("Error logging out user");
+        case ole: OptimisticLockException => error(?("User_Error_ErrorLoggingOutUserTryAgain"))
+        case pe: PersistenceException => error(?("User_Error_ErrorLoggingOutUser"))
       }
       redirectTo("list")
     }
 
-    val submitXhtml = submit("Logout", doSubmit)
+    val submitXhtml = submit(?("User_Logout"), doSubmit)
 
     bind(
       "user", xhtml,
@@ -183,7 +184,7 @@ class UserSnippet {
 
   def logoutUserText(xhtml: NodeSeq): NodeSeq = {
 
-    val logoutXhtml = Text("Logout User " + sessionUser.name)
+    val logoutXhtml = Text(i10n("User_LogoutUser", sessionUser.name))
 
     bind(
       "user", xhtml,

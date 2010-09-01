@@ -13,6 +13,8 @@ import SHtml._
 
 import domain.grocery._
 
+import I10N.i10n
+
 object categoryRequestVar extends RequestVar(new CategoryEntity)
 
 object categorySessionVar extends SessionVar(new CategoryEntity)
@@ -24,7 +26,8 @@ class CategorySnippet {
 
   def list(xhtml: NodeSeq): NodeSeq = for{
     category <- CategoryStore.retrieveAll
-    productListXhtml = link("/product/list", () => categorySessionVar(category), Text(category.name + " Product List"))
+    productListXhtml =
+    link("/product/list", () => categorySessionVar(category), Text(i10n("Category_ProductList", category.name)))
     node <- bind(
       "category", xhtml,
       "productList" -> productListXhtml)
@@ -38,41 +41,23 @@ class CategorySnippet {
 
     def doSubmit() = {
       if (requestCategory.name.length == 0) {
-        error("Category name cannot be blank")
+        error(?("Category_Error_CategoryNameCannotBeBlank"))
       } else {
         CategoryStore.retrieveByName(requestCategory.name) match {
           case None => CategoryStore.create(requestCategory.name)
-          case _ => error("Category " + requestCategory.name + " already exists")
+          case _ => error(i10n("Category_Error_CategoryAlreadyExists", requestCategory.name))
         }
         redirectTo("list")
       }
     }
 
     val nameXhtml = text("", doName(_))
-    val submitXhtml = submit("Add", doSubmit)
+    val submitXhtml = submit(?("Category_Add"), doSubmit)
 
     bind(
       "category", xhtml,
       "name" -> nameXhtml,
       "submit" -> submitXhtml)
-  }
-
-  def productListText(xhtml: NodeSeq): NodeSeq = {
-
-    val listXhtml = Text(sessionCategory.name + " Product List")
-
-    bind(
-      "category", xhtml,
-      "list" -> listXhtml)
-  }
-
-  def addProductText(xhtml: NodeSeq): NodeSeq = {
-
-    val addXhtml = Text("Add " + sessionCategory.name + " Product")
-
-    bind(
-      "category", xhtml,
-      "add" -> addXhtml)
   }
 
 }

@@ -1,15 +1,19 @@
 package bootstrap.liftweb
 
-import _root_.net.liftweb.http._
-import _root_.net.liftweb.sitemap._
-import _root_.net.liftweb.sitemap.Loc._
+import xml.Text
+
+import net.liftweb.http._
+import net.liftweb.sitemap._
+import net.liftweb.sitemap.Loc._
 
 import net.liftweb.common.Full
 import auth.{AuthRole, HttpBasicAuthentication, userRoles}
 
+import S._
+
 import com.imaginej.domain.user._
-import com.imaginej.snippet.{loggedInNickNameSessionVar, userSessionVar}
 import com.imaginej.comet.SessionActor
+import com.imaginej.snippet.{currentLocale, loggedInNickNameSessionVar, userSessionVar}
 
 /**
  * A class that's instantiated early and run.  It allows the application
@@ -94,21 +98,21 @@ class Boot {
 
     // site map
     val entries = SiteMap(
-      Menu(Loc("Home", "index" :: Nil, "Home")),
-      Menu(Loc("User Login", "user" :: "login" :: Nil, "User Login")),
-      Menu(Loc("User Logout", "user" :: "logout" :: Nil, "User Logout")),
-      Menu(Loc("User List", "user" :: "list" :: Nil, "User List")),
-      Menu(Loc("Category List", "category" :: "list" :: Nil, "Category List")),
-      Menu(Loc("Add User", "user" :: "add" :: Nil, "Add User", Hidden)),
-      Menu(Loc("Add Category", "category" :: "add" :: Nil, "Add Category", Hidden)),
-      Menu(Loc("Product List", "product" :: "list" :: Nil, "Product List", Hidden)),
-      Menu(Loc("Add Product", "product" :: "add" :: Nil, "Add Product", Hidden)),
-      Menu(Loc("Edit Product", "product" :: "edit" :: Nil, "Edit Product", Hidden)),
-      Menu(Loc("Transfer Product", "product" :: "transfer" :: Nil, "Transfer Product", Hidden)),
-      Menu(Loc("Add To Cart", "cart" :: "add" :: Nil, "Add To Cart", Hidden)),
-      Menu(Loc("Cart", "cart" :: "list" :: Nil, "Cart", Hidden)),
-      Menu(Loc("Remove Cart Item", "cart" :: "remove" :: Nil, "Remove Cart Item", Hidden)),
-      Menu(Loc("Checked Out", "cart" :: "checkedOut" :: Nil, "Checked Out", Hidden))
+      Menu(Loc("Home", "index" :: Nil, ?("Menu_Home"))),
+      Menu(Loc("User Login", "user" :: "login" :: Nil, ?("Menu_UserLogin"))),
+      Menu(Loc("User Logout", "user" :: "logout" :: Nil, ?("Menu_UserLogout"))),
+      Menu(Loc("User List", "user" :: "list" :: Nil, ?("Menu_UserList"))),
+      Menu(Loc("Category List", "category" :: "list" :: Nil, ?("Menu_CategoryList"))),
+      Menu(Loc("Add User", "user" :: "add" :: Nil, "", Hidden)),
+      Menu(Loc("Add Category", "category" :: "add" :: Nil, "", Hidden)),
+      Menu(Loc("Product List", "product" :: "list" :: Nil, "", Hidden)),
+      Menu(Loc("Add Product", "product" :: "add" :: Nil, "", Hidden)),
+      Menu(Loc("Edit Product", "product" :: "edit" :: Nil, "", Hidden)),
+      Menu(Loc("Transfer Product", "product" :: "transfer" :: Nil, "", Hidden)),
+      Menu(Loc("Add To Cart", "cart" :: "add" :: Nil, "", Hidden)),
+      Menu(Loc("Cart", "cart" :: "list" :: Nil, "", Hidden)),
+      Menu(Loc("Remove Cart Item", "cart" :: "remove" :: Nil, "", Hidden)),
+      Menu(Loc("Checked Out", "cart" :: "checkedOut" :: Nil, "", Hidden))
       )
     LiftRules.setSiteMap(entries)
 
@@ -116,8 +120,10 @@ class Boot {
     val roles = AuthRole("Admin")
     // protected resources
     LiftRules.httpAuthProtectedResource.append {
-      case (Req("category" :: _, _, _)) => roles.getRoleByName("Admin")
-      case (Req("product" :: _, _, _)) => roles.getRoleByName("Admin")
+      case (Req("category" :: "add" :: _, _, _)) => roles.getRoleByName("Admin")
+      case (Req("product" :: "add" :: _, _, _)) => roles.getRoleByName("Admin")
+      case (Req("product" :: "edit" :: _, _, _)) => roles.getRoleByName("Admin")
+      case (Req("product" :: "transfer" :: _, _, _)) => roles.getRoleByName("Admin")
     }
     // authentication
     LiftRules.authentication = HttpBasicAuthentication("lift") {
@@ -125,6 +131,9 @@ class Boot {
         userRoles(AuthRole("Admin"))
         true
     }
+    // i10n
+    LiftRules.resourceNames = "default" :: "menu" :: "index" :: "user" :: "category" :: "product" :: "cart" :: Nil
+    LiftRules.localeCalculator = r => currentLocale openOr LiftRules.defaultLocaleCalculator(r)
   }
 }
 

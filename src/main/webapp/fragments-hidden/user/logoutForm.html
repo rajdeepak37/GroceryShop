@@ -1,5 +1,13 @@
-<lift:userSnippet.ifLoggedIn xmlns:lift="http://www.w3.org/1999/xhtml">
+<lift:userSnippet.ifLoggedIn xmlns:lift="http://www.w3.org/1999/xhtml" xmlns:user="http://www.w3.org/1999/xhtml">
     <lift:userSnippet.logout form="post" eager_eval="true">
-        <user:submit xmlns:user="http://www.w3.org/1999/xhtml"/>
+        <table xmlns:user="http://www.w3.org/1999/xhtml">
+            <tr>
+                <td></td>
+                <td>
+                    <user:submit/>
+                </td>
+                <td></td>
+            </tr>
+        </table>
     </lift:userSnippet.logout>
 </lift:userSnippet.ifLoggedIn>
